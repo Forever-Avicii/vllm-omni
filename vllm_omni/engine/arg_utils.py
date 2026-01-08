@@ -46,7 +46,8 @@ class OmniEngineArgs(EngineArgs):
     engine_output_type: str | None = None
     hf_config_name: str | None = None
     stage_connector_name: str = "SharedMemoryConnector"
-    stage_connector_spec: dict[str, Any] = field(default_factory=dict)
+    stage_connector_spec: dict[str, any] = field(default_factory=dict)
+    async_chunk: bool = false
 
     def draw_hf_text_config(self, config_dict: dict) -> Qwen3OmniMoeTextConfig:
         # transformers' get_text_config method is used to get the text config from thinker_config.
@@ -135,7 +136,8 @@ class AsyncOmniEngineArgs(AsyncEngineArgs):
     engine_output_type: str | None = None
     hf_config_name: str | None = None
     stage_connector_name: str = "SharedMemoryConnector"
-    stage_connector_spec: dict[str, Any] = field(default_factory=dict)
+    stage_connector_spec: dict[str, any] = field(default_factory=dict)
+    async_chunk: bool = false
 
     def draw_hf_text_config(self, config_dict: dict) -> Qwen3OmniMoeTextConfig:
         # transformers' get_text_config method is used to get the text config from thinker_config.

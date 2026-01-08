@@ -29,7 +29,7 @@ class OmniARScheduler(VLLMScheduler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         model_config = self.vllm_config.model_config
-        connector_specs = ConnectorSpec(name=model_configstage_connector_name,
+        connector_specs = ConnectorSpec(name=model_config.stage_connector_name,
                                         extra=model_config.stage_connector_spec)
         self.omni_connector = OmniConnectorFactory.create_connector(connector_specs)
 
