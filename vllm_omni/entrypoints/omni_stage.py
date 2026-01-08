@@ -588,6 +588,14 @@ def _stage_worker(
             logger.debug("[Stage-%s] Failed to set up sequential initialization lock: %s", stage_id, e)
     # Init engine based on stage_type
     logger.debug("[Stage-%s] Initializing %s engine with args keys=%s", stage_id, stage_type, list(engine_args.keys()))
+    if engine_args.get("async_chunk", False):
+        logger.debug("[Stage-%s] Async chunk enabled, injecting connectors config", stage_id)
+        stage_connector_spec = {}
+        for v in data.values():
+            stage_connector_spec = dict(v.get("spec", {}))
+            break
+        stage_connector_spec["stage_id"] = stage_id
+        engine_args["stage_connectors"] = stage_connector_spec
     try:
         if stage_type == "diffusion":
             engine_args.pop("model_stage")
@@ -1078,6 +1086,14 @@ async def _stage_worker_async(
         stage_type,
         list(engine_args.keys()),
     )
+    if engine_args.get("async_chunk", False):
+        logger.debug("[Stage-%s] Async chunk enabled, injecting connectors config", stage_id)
+        stage_connector_spec = {}
+        for v in data.values():
+            stage_connector_spec = dict(v.get("spec", {}))
+            break
+        stage_connector_spec["stage_id"] = stage_id
+        engine_args["stage_connectors"] = stage_connector_spec
     try:
         if stage_type == "diffusion":
             # For diffusion, we need to extract diffusion-specific config

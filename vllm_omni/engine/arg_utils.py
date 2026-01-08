@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from transformers.models.qwen3_omni_moe.configuration_qwen3_omni_moe import Qwen3OmniMoeTextConfig
 from vllm.engine.arg_utils import EngineArgs
@@ -36,6 +36,8 @@ class OmniEngineArgs(EngineArgs):
         engine_output_type: Optional output type specification for the engine.
             Used to route outputs to appropriate processors (e.g., "image",
             "audio", "latents"). If None, output type is inferred.
+        stage_connector_name: Stage connector name
+        stage_connector_spec: Extra configuration for stage connector
     """
 
     stage_id: int = 0
@@ -43,6 +45,8 @@ class OmniEngineArgs(EngineArgs):
     model_arch: str = "Qwen2_5OmniForConditionalGeneration"
     engine_output_type: str | None = None
     hf_config_name: str | None = None
+    stage_connector_name: str = "SharedMemoryConnector"
+    stage_connector_spec: dict[str, Any] = field(default_factory=dict)
 
     def draw_hf_text_config(self, config_dict: dict) -> Qwen3OmniMoeTextConfig:
         # transformers' get_text_config method is used to get the text config from thinker_config.
@@ -94,6 +98,9 @@ class OmniEngineArgs(EngineArgs):
         config_dict["model_stage"] = self.model_stage
         config_dict["model_arch"] = self.model_arch
         config_dict["engine_output_type"] = self.engine_output_type
+        config_dict["stage_connector_name"] = self.stage_connector_name
+        config_dict["stage_connector_spec"] = self.stage_connector_spec
+
         config_dict["hf_config_name"] = self.hf_config_name
         if self.hf_config_name is not None:
             config_dict["hf_text_config"] = self.draw_hf_text_config(config_dict)
@@ -118,6 +125,8 @@ class AsyncOmniEngineArgs(AsyncEngineArgs):
         engine_output_type: Optional output type specification for the engine.
             Used to route outputs to appropriate processors (e.g., "image",
             "audio", "latents"). If None, output type is inferred.
+        stage_connector_name: Stage connector name
+        stage_connector_spec: Extra configuration for stage connector
     """
 
     stage_id: int = 0
@@ -125,6 +134,8 @@ class AsyncOmniEngineArgs(AsyncEngineArgs):
     model_arch: str = "Qwen2_5OmniForConditionalGeneration"
     engine_output_type: str | None = None
     hf_config_name: str | None = None
+    stage_connector_name: str = "SharedMemoryConnector"
+    stage_connector_spec: dict[str, Any] = field(default_factory=dict)
 
     def draw_hf_text_config(self, config_dict: dict) -> Qwen3OmniMoeTextConfig:
         # transformers' get_text_config method is used to get the text config from thinker_config.
@@ -166,6 +177,8 @@ class AsyncOmniEngineArgs(AsyncEngineArgs):
         config_dict["model_stage"] = self.model_stage
         config_dict["model_arch"] = self.model_arch
         config_dict["engine_output_type"] = self.engine_output_type
+        config_dict["stage_connector_name"] = self.stage_connector_name
+        config_dict["stage_connector_spec"] = self.stage_connector_spec
 
         config_dict["hf_config_name"] = self.hf_config_name
         if self.hf_config_name is not None:

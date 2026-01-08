@@ -58,6 +58,8 @@ class OmniModelConfig(ModelConfig):
         engine_output_type: Optional output type specification for the engine.
             Used to route outputs to appropriate processors (e.g., "image",
             "audio", "latents"). If None, output type is inferred.
+        stage_connector_name: Stage connector name
+        stage_connector_spec: Extra configuration for stage connector
 
     Example:
         >>> config = OmniModelConfig(
@@ -72,6 +74,8 @@ class OmniModelConfig(ModelConfig):
     model_arch: str = "Qwen2_5OmniForConditionalGeneration"
     engine_output_type: str | None = None
     hf_config_name: str | None = None
+    stage_connector_name: str = "SharedMemoryConnector"
+    stage_connector_spec: dict[str, Any] = field(default_factory=dict)
 
     @property
     def registry(self):

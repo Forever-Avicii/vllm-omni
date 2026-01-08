@@ -28,14 +28,10 @@ class OmniARScheduler(VLLMScheduler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.vllm_config.parallel_config.tensor_parallel_size > 1:
-            extra = {"shm_threshold": 65536, "stage_id": 0}
-            connector_specs = ConnectorSpec(name="SharedMemoryConnector", extra=extra)
-            self.omni_connector = OmniConnectorFactory.create_connector(connector_specs)
-        else:
-            extra = {"shm_threshold": 65536, "stage_id": 1}
-            connector_specs = ConnectorSpec(name="SharedMemoryConnector", extra=extra)
-            self.omni_connector = OmniConnectorFactory.create_connector(connector_specs)
+        model_config = self.vllm_config.model_config
+        connector_specs = ConnectorSpec(name=model_configstage_connector_name,
+                                        extra=model_config.stage_connector_spec)
+        self.omni_connector = OmniConnectorFactory.create_connector(connector_specs)
 
     # Ensure scheduled_new_reqs carry omni-specific payloads
     # (e.g., additional_information)
