@@ -100,7 +100,11 @@ class OmniEngineArgs(EngineArgs):
         config_dict["model_arch"] = self.model_arch
         config_dict["engine_output_type"] = self.engine_output_type
         config_dict["stage_connector_name"] = self.stage_connector_name
-        config_dict["stage_connector_spec"] = self.stage_connector_spec
+        # Copy to avoid modifying the original args
+        config_dict["stage_connector_spec"] = self.stage_connector_spec.copy()
+        if "extra" not in config_dict["stage_connector_spec"]:
+            config_dict["stage_connector_spec"]["extra"] = {}
+        config_dict["stage_connector_spec"]["extra"]["stage_id"] = self.stage_id
 
         config_dict["hf_config_name"] = self.hf_config_name
         if self.hf_config_name is not None:
@@ -180,7 +184,11 @@ class AsyncOmniEngineArgs(AsyncEngineArgs):
         config_dict["model_arch"] = self.model_arch
         config_dict["engine_output_type"] = self.engine_output_type
         config_dict["stage_connector_name"] = self.stage_connector_name
-        config_dict["stage_connector_spec"] = self.stage_connector_spec
+        # Copy to avoid modifying the original args
+        config_dict["stage_connector_spec"] = self.stage_connector_spec.copy()
+        if "extra" not in config_dict["stage_connector_spec"]:
+            config_dict["stage_connector_spec"]["extra"] = {}
+        config_dict["stage_connector_spec"]["extra"]["stage_id"] = self.stage_id
 
         config_dict["hf_config_name"] = self.hf_config_name
         if self.hf_config_name is not None:
