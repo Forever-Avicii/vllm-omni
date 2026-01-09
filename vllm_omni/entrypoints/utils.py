@@ -187,6 +187,9 @@ def load_stage_configs_from_yaml(config_path: str, base_engine_args: dict | None
         base_engine_args = {}
     config_data = OmegaConf.load(config_path)
     stage_args = config_data.stage_args
+
+    global_async_chunk = config_data.get("async_chunk", False)
+
     # Convert any nested dataclass objects to dicts before creating OmegaConf
     base_engine_args = _convert_dataclasses_to_dict(base_engine_args)
     base_engine_args = OmegaConf.create(base_engine_args)
@@ -195,6 +198,10 @@ def load_stage_configs_from_yaml(config_path: str, base_engine_args: dict | None
         # Update base_engine_args with stage-specific engine_args if they exist
         if hasattr(stage_arg, "engine_args") and stage_arg.engine_args is not None:
             base_engine_args_tmp = OmegaConf.merge(base_engine_args_tmp, stage_arg.engine_args)
+
+        if "async_chunk" not in base_engine_args_tmp:
+            base_engine_args_tmp.async_chunk = global_async_chunk
+
         stage_arg.engine_args = base_engine_args_tmp
     return stage_args
 
